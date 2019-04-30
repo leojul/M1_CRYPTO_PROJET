@@ -13,6 +13,7 @@
 
 #include "tczero.h"
 #include "cbc.h"
+#include "birthday_attack.h"
 
 #define SIZE_MESSAGE_BITS 512   //nombre de bits
 #define SIZE_MESSAGE 64       //nombre d'octets (=1024/8)
