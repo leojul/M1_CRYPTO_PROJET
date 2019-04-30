@@ -5,6 +5,49 @@
 #include "tczero.h"
 #include "cbc.h"
 
+
+//-----------------------------------------------
+void print_only_the_printable(char * st, int size){
+    int i;
+    for(i=0;i<size;i++){
+        if((st[i]>= 32) && (st[i]<=126)){
+            printf("%c", st[i]);
+        }
+        else{
+            printf(".");
+        }
+    }
+    printf("\n");
+}
+//-----------------------------------------------
+//Permet de vérifier si le cryptage est déterministe : Si = 1, cbc_enc est déterministe, 0 sinon.
+int test_cbc_enc_determinism(uint64_t key[2], uint8_t *pt, size_t ptlen){
+
+	uint8_t *ct1; //premier cryptage de pt
+	uint8_t *ct2; //deuxième cryptage de pt. Si ct1 = ct2, le cryptage est déterministe (et c'est mauvais !)
+
+    ct1 = malloc(ptlen*sizeof(uint8_t));
+	ct2 = malloc(ptlen*sizeof(uint8_t));
+
+
+	cbc_enc(key, pt, ct1, ptlen*8);
+	cbc_enc(key, pt, ct2, ptlen*8);
+    print_only_the_printable( (char*)ct1, ptlen);
+    print_only_the_printable( (char*)ct2, ptlen);
+
+    int i;
+
+	for(i=0; i<ptlen; i++){
+
+		if(ct1[i] != ct2[i]){
+			return 0;
+		}
+	}
+
+	return 1;
+}
+//-----------------------------------------------
+//----------------- CRYPTAGE --------------------
 //-----------------------------------------------
 void cbc_enc(uint64_t key[2], uint8_t *pt, uint8_t *ct, size_t ptlen){
 
@@ -37,35 +80,11 @@ void cbc_enc(uint64_t key[2], uint8_t *pt, uint8_t *ct, size_t ptlen){
 
         }
         //printf("BLOC %d : %.8s%.8s = %llu%llu\n", i, (char*)(plaintext+i),(char*)(plaintext+i+1),(long long unsigned int)cyphertext[i],(long long unsigned int)cyphertext[i+1]);
-	}
-    printf("\n");
-    
+	} 
     
 }
 //-----------------------------------------------
-//Permet de vérifier si le cryptage est déterministe : Si = 1, cbc_enc est déterministe, 0 sinon.
-int test_cbc_enc_determinism(uint64_t key[2], uint8_t *pt, size_t ptlen){
-
-	uint8_t *ct1; //premier cryptage de pt
-	uint8_t *ct2; //deuxième cryptage de pt. Si ct1 = ct2, le cryptage est déterministe (et c'est mauvais !)
-
-    ct1 = malloc(ptlen*sizeof(uint8_t));
-	ct2 = malloc(ptlen*sizeof(uint8_t));
-
-	cbc_enc(key, pt, ct1, ptlen);
-	cbc_enc(key, pt, ct2, ptlen);
-
-    int i;
-
-	for(i=0; i<ptlen; i++){
-
-		if(ct1[i] != ct2[i]){
-			return 0;
-		}
-	}
-
-	return 1;
-}
+//---------------- DECRYPTAGE -------------------
 //-----------------------------------------------
 void cbc_dec(uint64_t key[2], uint8_t *ct, uint8_t *pt, size_t ctlen){
 

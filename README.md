@@ -18,7 +18,7 @@ Là encore, pas plus compliqué que le cryptage : Le message chiffré M' est div
 - le (plaintext XOR IV) dans le cas du premier bloc.
 - le (plaintext XOR le cyphertext du bloc d'avant) dans le cas des autres blocs.
 
-Pour retrouver le premier plaintext, il nous faut IV. 
+Pour retrouver le premier plaintext, il nous faut IV, (déduit de la clef). Cependant, cela rend le cryptage déterministe.
 
 
 

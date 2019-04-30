@@ -28,18 +28,6 @@ uint64_t key_generator(){
     return num;
 }
 //-----------------------------------------------
-void print_only_the_printable(char * st, int size){
-    int i;
-    for(i=0;i<size;i++){
-        if((st[i]>= 32) && (st[i]<=126)){
-            printf("%c", st[i]);
-        }
-        else{
-            printf(".");
-        }
-    }
-}
-//-----------------------------------------------
 //Used to test encryption and decryption
 int main(){
 
@@ -65,11 +53,11 @@ int main(){
     //VERIFICATION 0 : le cryptage marche-il ?
     printf("-------------------------------------\n");
     cbc_enc(key, pt, ct, SIZE_MESSAGE_BITS);
-    printf("Message crypté : ");
+    printf("Message crypté :\n");
     print_only_the_printable((char*)ct, SIZE_MESSAGE);
-    fflush(stdout);
 
     //VERIFICATION 1 : le cryptage est-il non-déterministe ?
+    printf("-------------------------------------\n");
     test_cbc_enc_determinism(key, pt, SIZE_MESSAGE) ? printf("[DETERMINISTE]\n") : printf("[NON-DETERMINISTE]\n");
 
     //VERIFICATION 2 : Le décryptage marche-il ?
